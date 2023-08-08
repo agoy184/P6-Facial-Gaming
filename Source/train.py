@@ -40,13 +40,14 @@ def plot_history(history):
     plt.show()
 
 if __name__ == "__main__":
-    epochs = 15
+    epochs = 3
     print('* Data preprocessing')
     train_dataset, validation_dataset, test_dataset = get_datasets()
     for name, model_class in models.items():
         print('* Training {} for {} epochs'.format(name, epochs))
         model = model_class(input_shape, categories_count)
-        model.train_model(train_dataset, validation_dataset, epochs)
+        history = model.train_model(train_dataset, validation_dataset, epochs)
+        plot_history(history)
         print('* Evaluating {}'.format(name))
         model.evaluate(test_dataset)
         print('* Confusion Matrix for {}'.format(name))
