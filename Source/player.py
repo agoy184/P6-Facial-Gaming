@@ -98,7 +98,29 @@ class UserWebcamPlayer:
         #
         # You have to use your saved model, use resized img as input, and get one classification value out of it
         # The classification value should be 0, 1, or 2 for neutral, happy or surprise respectively
-        return 0
+        import cv2
+        import numpy as np
+        from tensorflow.keras.models import load_model
+        from tensorflow.keras.preprocessing.image import img_to_array
+            
+        img_resized = cv2.resize(img, (150, 150))
+        
+        # preprocessing the image
+        img_resized = img_to_array(img_resized)
+        img_resized = np.expand_dims(img_resized, axis=0)
+        
+        # normlize the image
+        img_resized = img_resized.astype('float32') / 255.0
+        
+        # load the model
+        model_path = "dropout_model_10_epochs_timestamp_1691618103.keras"
+        model = load_model(model_path)
+        
+        # pass the image to the model
+        predictions = model.predict(img_resized)
+        
+        # return the predicted emotion (the index of the maximum value in predictions is the class label)
+        return np.argmax(predictions[0])
     
     def get_move(self, board_state):
         row, col = None, None
