@@ -1,5 +1,6 @@
 from preprocess import get_datasets
 from models.basic_model import BasicModel
+from models.dropout_model import DropoutModel
 from models.vgg_model import VGGModel
 from models.merged_model import MergedModel
 from config import image_size, categories
@@ -10,7 +11,8 @@ input_shape = (image_size[0], image_size[1], 3)
 categories_count = 3
 
 models = {
-    'basic_model': BasicModel,
+    'dropout_model': DropoutModel,
+    #'basic_model': BasicModel
     #'vgg_model': VGGModel,
     #'merged_model': MergedModel,
 }
@@ -40,7 +42,7 @@ def plot_history(history):
     plt.show()
 
 if __name__ == "__main__":
-    epochs = 3
+    epochs = 10
     print('* Data preprocessing')
     train_dataset, validation_dataset, test_dataset = get_datasets()
     for name, model_class in models.items():
@@ -55,3 +57,4 @@ if __name__ == "__main__":
         filename = '{}_{}_epochs_timestamp_{}.keras'.format(name, epochs, int(time.time()))
         model.save_model(filename)
         print('* Model saved as {}'.format(filename))
+        model.print_summary()
