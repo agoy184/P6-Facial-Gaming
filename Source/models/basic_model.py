@@ -10,14 +10,22 @@ class BasicModel(Model):
         #keras rescaling layer <- use this
         self.model.add(tf.keras.layers.Rescaling(scale=1./255, offset=0.0))
         #could also change training input
+        self.model.add(layers.Conv2D(16, (3, 3), activation='relu', input_shape=input_shape))
+        self.model.add(layers.MaxPooling2D((1, 2)))
         self.model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
-        self.model.add(layers.MaxPooling2D((2, 2)))
+        self.model.add(layers.MaxPooling2D((1, 2)))
+        self.model.add(layers.Conv2D(48, (3, 3), activation='relu'))
+        self.model.add(layers.MaxPooling2D((2, 1)))
         self.model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-        self.model.add(layers.MaxPooling2D((2, 2)))
-        self.model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+        self.model.add(layers.MaxPooling2D((2, 1)))
+
 
         self.model.add(layers.Flatten())
-        self.model.add(layers.Dense(64, activation='relu'))
+        # self.model.add(layers.Dense(16, activation='relu'))
+        self.model.add(layers.Dense(32, activation='relu'))
+        # self.model.add(layers.Dense(48, activation='relu'))
+        # self.model.add(layers.Dense(64, activation='relu'))
+
         self.model.add(layers.Dense(categories_count, activation='softmax'))
     
     def _compile_model(self):

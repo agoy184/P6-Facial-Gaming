@@ -40,7 +40,7 @@ def plot_history(history):
     plt.show()
 
 if __name__ == "__main__":
-    epochs = 3
+    epochs = 10
     print('* Data preprocessing')
     train_dataset, validation_dataset, test_dataset = get_datasets()
     for name, model_class in models.items():
