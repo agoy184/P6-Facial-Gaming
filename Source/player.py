@@ -3,7 +3,6 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 import matplotlib.pyplot as plt
 from config import BOARD_SIZE, categories, image_size
-import cv2
 
 class TicTacToePlayer:
     def get_move(self, board_state):
@@ -29,6 +28,8 @@ class RandomPlayer:
                 if board_state[i][j] is None:
                     positions.append((i, j))
         return random.choice(positions)
+
+import cv2
 
 class UserWebcamPlayer:
     def _process_frame(self, frame):
@@ -80,7 +81,7 @@ class UserWebcamPlayer:
             img = self._access_webcam()
             emotion = self._get_emotion(img)
             if emotion not in range(len(categories)):
-                print('Invalid emotion number {}'.format(i))
+                print('Invalid emotion number {}'.format(emotion))
                 return None
             print('Emotion detected as {} ({} {}). Enter \'text\' to use text input instead (0, 1 or 2). Otherwise, press Enter to continue.'.format(categories[emotion], row_or_col, emotion))
             inp = input()
@@ -121,7 +122,7 @@ class UserWebcamPlayer:
         # pass the image to the model
         predictions = model.predict(img_resized)
         
-        plt.imshow(img, cmap='RGB', vmin=0, vmax=255)
+        plt.imshow(img, cmap='gray', vmin=0, vmax=255)
         plt.show()
 
         # return the predicted emotion (the index of the maximum value in predictions is the class label)
