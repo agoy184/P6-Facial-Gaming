@@ -104,29 +104,43 @@ class UserWebcamPlayer:
         #
         # You have to use your saved model, use resized img as input, and get one classification value out of it
         # The classification value should be 0, 1, or 2 for neutral, happy or surprise respectively
+        
+        
         img_color = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
 
         img_resized = cv2.resize(img, (150, 150))
         
         # preprocessing the image
-        img_resized = img_to_array(img_resized)
-        img_resized = np.expand_dims(img_resized, axis=0)
+        # img_resized = img_to_array(img_resized)
+        # img_resized = np.expand_dims(img_resized, axis=0)
         
         # normlize the image
-        img_resized = img_resized.astype('float32') / 255.0
+        # img_resized = img_resized.astype('float32') / 255.0
         
+        # Suppose you have an image represented as a 2D NumPy array
+        # image_array = np.array([[...], [...], ...])  # Replace with your image data
+
+        # Assuming the image dimensions are (height, width)
+        print(len(img_resized))
+        print(img_resized)
+        print(len(img_resized[0]))
+        height, width = img_resized.shape
+
+        # Reshape the image to add batch and channel dimensions
+        image_reshaped = img_resized.reshape((1, height, width, 1))  # Reshape with single channel
+        image_rgb = np.repeat(image_reshaped, 3, axis=-1)  # Repeat the single channel to create RGB channels
         # load the model
         model_path = "dropout_model_10_epochs_timestamp_1691618103.keras"
         model = load_model(model_path)
         
         # pass the image to the model
-        predictions = model.predict(img_resized)
+        predictions = model.predict(image_rgb)
         
-        plt.imshow(img, cmap='gray', vmin=0, vmax=255)
-        plt.show()
+        #plt.imshow(img, cmap='gray', vmin=0, vmax=255)
+        #plt.show()
 
         # return the predicted emotion (the index of the maximum value in predictions is the class label)
-        return np.argmax(predictions[0])
+        return int(np.argmax(predictions[0]))
     
     def get_move(self, board_state):
         row, col = None, None

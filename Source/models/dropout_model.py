@@ -6,7 +6,7 @@ from tensorflow.keras import datasets, layers, models
 class DropoutModel(Model):
     def _define_model(self, input_shape, categories_count):
         # Your code goes here
-
+        # Calls sequential, but it needs to have input value of 3?
         self.model = models.Sequential()
         #keras rescaling layer <- use this
         self.model.add(tf.keras.layers.Rescaling(scale=1./255, offset=0.0))
