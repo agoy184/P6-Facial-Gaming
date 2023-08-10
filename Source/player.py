@@ -1,4 +1,9 @@
+import numpy as np
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.image import img_to_array
+import matplotlib.pyplot as plt
 from config import BOARD_SIZE, categories, image_size
+import cv2
 
 class TicTacToePlayer:
     def get_move(self, board_state):
@@ -25,11 +30,9 @@ class RandomPlayer:
                     positions.append((i, j))
         return random.choice(positions)
 
-import cv2
-
 class UserWebcamPlayer:
     def _process_frame(self, frame):
-        frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2RGB)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         width, height = frame.shape
         size = min(width, height)
         pad = int((width-size)/2), int((height-size)/2)
@@ -100,13 +103,9 @@ class UserWebcamPlayer:
         #
         # You have to use your saved model, use resized img as input, and get one classification value out of it
         # The classification value should be 0, 1, or 2 for neutral, happy or surprise respectively
-        import cv2
-        import numpy as np
-        from tensorflow.keras.models import load_model
-        from tensorflow.keras.preprocessing.image import img_to_array
-        import matplotlib.pyplot as plt
-        print("hi")
-        img_resized = cv2.resize(img, (150, 150, 3))
+        img_color = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+
+        img_resized = cv2.resize(img, (150, 150))
         
         # preprocessing the image
         img_resized = img_to_array(img_resized)
