@@ -25,9 +25,11 @@ class RandomPlayer:
                     positions.append((i, j))
         return random.choice(positions)
 
+import cv2
+
 class UserWebcamPlayer:
     def _process_frame(self, frame):
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2RGB)
         width, height = frame.shape
         size = min(width, height)
         pad = int((width-size)/2), int((height-size)/2)
@@ -35,7 +37,6 @@ class UserWebcamPlayer:
         return frame
 
     def _access_webcam(self):
-        import cv2
         cv2.namedWindow("preview")
         vc = cv2.VideoCapture(0)
         if vc.isOpened(): # try to get the first frame
@@ -72,6 +73,7 @@ class UserWebcamPlayer:
         try:
             row_or_col = 'row' if is_row else 'col'
             self._print_reference(row_or_col)
+            # This is where it accesses ur webcam to take picture
             img = self._access_webcam()
             emotion = self._get_emotion(img)
             if emotion not in range(len(categories)):
@@ -102,8 +104,9 @@ class UserWebcamPlayer:
         import numpy as np
         from tensorflow.keras.models import load_model
         from tensorflow.keras.preprocessing.image import img_to_array
-            
-        img_resized = cv2.resize(img, (150, 150))
+        import matplotlib.pyplot as plt
+        print("hi")
+        img_resized = cv2.resize(img, (150, 150, 3))
         
         # preprocessing the image
         img_resized = img_to_array(img_resized)
@@ -119,6 +122,9 @@ class UserWebcamPlayer:
         # pass the image to the model
         predictions = model.predict(img_resized)
         
+        plt.imshow(img, cmap='RGB', vmin=0, vmax=255)
+        plt.show()
+
         # return the predicted emotion (the index of the maximum value in predictions is the class label)
         return np.argmax(predictions[0])
     
